@@ -1,0 +1,41 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio folders
+.vs/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.*
+
+# Database files (SQLite)
+*.db
+*.db-shm
+*.db-wal
+
+# Backup / temp files
+*.bak
+*.tmp
+*.temp
+
+# Published output
+publish/
+wwwroot/
+
+# IDE configs
+.idea/
+.vscode/
+
+# Node / frontend builds (אם תצרף בעתיד לקליינט)
+node_modules/
+dist/
