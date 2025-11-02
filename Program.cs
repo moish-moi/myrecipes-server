@@ -2,14 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using MyRecipes.Api.Data;
 using MyRecipes.Api.Services;
 
-
 var builder = WebApplication.CreateBuilder(args);
-
 
 // הוספת DbContext עם SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=./myrecipes.db"));
-
 
 // הוספת AuthService
 builder.Services.AddScoped<AuthService>();
@@ -40,16 +37,17 @@ builder.Services.AddAuthentication(options =>
 // הוספת Authorization
 builder.Services.AddAuthorization();
 
+// הוספת Controllers
+builder.Services.AddControllers();
 
-
-// CORS לפיתוח (נצמצם בהמשך למקור הקליינט)
+// CORS לפיתוח
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClient", p =>
         p.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 });
 
-// OpenAPI נשאיר אם נוח לך
+// OpenAPI
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -64,13 +62,16 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+// ✅ הקו החשוב ביותר - זה מאפשר את ה-Controllers!
+app.MapControllers();
+
 // ✔️ נקודת בריאות
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
 // ✔️ נקודת גרסה
 app.MapGet("/version", () => Results.Ok(new { version = "0.1.0" }));
 
-// (אופציונלי) להשאיר את WeatherForecast לדוגמה
+// WeatherForecast
 var summaries = new[]
 {
     "Freezing","Bracing","Chilly","Cool","Mild","Warm","Balmy","Hot","Sweltering","Scorching"
@@ -89,7 +90,6 @@ app.MapGet("/weatherforecast", () =>
 });
 
 app.Run();
-
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
