@@ -1,4 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using MyRecipes.Api.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+// הוספת DbContext עם SQLite
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=myrecipes.db"));
+
+
 
 // CORS לפיתוח (נצמצם בהמשך למקור הקליינט)
 builder.Services.AddCors(options =>
