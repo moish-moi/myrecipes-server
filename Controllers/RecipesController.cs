@@ -20,7 +20,7 @@ public class RecipesController : ControllerBase
     
     // GET: api/recipes - קבל את כל המתכונים של המשתמש
     [HttpGet]
-    public async Task<IActionResult> GetMyRecipes()
+    public IActionResult GetMyRecipes()
     {
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         
@@ -33,7 +33,7 @@ public class RecipesController : ControllerBase
     
     // GET: api/recipes/{id} - קבל מתכון ספציפי
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetRecipe(int id)
+    public IActionResult GetRecipe(int id)
     {
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         
@@ -46,7 +46,7 @@ public class RecipesController : ControllerBase
     
     // POST: api/recipes - הוספת מתכון חדש
     [HttpPost]
-    public async Task<IActionResult> CreateRecipe([FromBody] CreateRecipeRequest request)
+    public IActionResult CreateRecipe([FromBody] CreateRecipeRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Title))
             return BadRequest("שם המתכון הוא חובה");
@@ -65,14 +65,14 @@ public class RecipesController : ControllerBase
         };
         
         _context.Recipes.Add(recipe);
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
         
         return CreatedAtAction(nameof(GetRecipe), new { id = recipe.Id }, recipe);
     }
     
     // PUT: api/recipes/{id} - עדכון מתכון
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateRecipe(int id, [FromBody] CreateRecipeRequest request)
+    public IActionResult UpdateRecipe(int id, [FromBody] CreateRecipeRequest request)
     {
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         
@@ -87,14 +87,14 @@ public class RecipesController : ControllerBase
         recipe.PreparationTime = request.PreparationTime > 0 ? request.PreparationTime : recipe.PreparationTime;
         
         _context.Recipes.Update(recipe);
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
         
         return Ok(recipe);
     }
     
     // DELETE: api/recipes/{id} - מחיקת מתכון
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteRecipe(int id)
+    public IActionResult DeleteRecipe(int id)
     {
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         
@@ -103,14 +103,14 @@ public class RecipesController : ControllerBase
             return NotFound("המתכון לא נמצא");
         
         _context.Recipes.Remove(recipe);
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
         
         return Ok(new { message = "המתכון נמחק בהצלחה" });
     }
     
     // GET: api/recipes/search/{tag} - חיפוש לפי תגית
     [HttpGet("search/{tag}")]
-    public async Task<IActionResult> SearchByTag(string tag)
+    public IActionResult SearchByTag(string tag)
     {
         var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
         

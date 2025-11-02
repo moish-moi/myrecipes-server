@@ -20,7 +20,7 @@ public class AuthController : ControllerBase
     
     // POST: api/auth/register
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+    public IActionResult Register([FromBody] RegisterRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Username) || 
             string.IsNullOrWhiteSpace(request.Email) || 
@@ -42,14 +42,14 @@ public class AuthController : ControllerBase
         };
         
         _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
         
         return Ok(new { message = "הרשמה בוצעה בהצלחה", userId = user.Id });
     }
     
     // POST: api/auth/login
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    public IActionResult Login([FromBody] LoginRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Username) || 
             string.IsNullOrWhiteSpace(request.Password))
