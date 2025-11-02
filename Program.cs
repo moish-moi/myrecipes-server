@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyRecipes.Api.Data;
+using MyRecipes.Api.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,36 @@ var builder = WebApplication.CreateBuilder(args);
 // הוספת DbContext עם SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=./myrecipes.db"));
+
+
+// הוספת AuthService
+builder.Services.AddScoped<AuthService>();
+
+// הוספת JWT Authentication
+var key = builder.Configuration["Jwt:Key"] ?? "default-secret-key-change-this";
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "Bearer";
+    options.DefaultChallengeScheme = "Bearer";
+})
+.AddJwtBearer("Bearer", options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(key)
+        )
+    };
+});
+
+// הוספת Authorization
+builder.Services.AddAuthorization();
 
 
 
@@ -23,6 +55,9 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 app.UseCors("AllowClient");
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
@@ -54,6 +89,7 @@ app.MapGet("/weatherforecast", () =>
 });
 
 app.Run();
+
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
