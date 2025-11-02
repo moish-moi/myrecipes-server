@@ -4,11 +4,12 @@ public class Recipe
 {
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
-    public string Ingredients { get; set; } = string.Empty; // נשמור כטקסט מופרד בפסיקים
+    public string Ingredients { get; set; } = string.Empty;
     public string Instructions { get; set; } = string.Empty;
-    public string Tags { get; set; } = string.Empty; // תגיות מופרדות בפסיקים
-    public int PreparationTime { get; set; } // בדקות
+    public string Tags { get; set; } = string.Empty;
+    public int PreparationTime { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;  // ← הוסף את זה
     
     // קשר למשתמש
     public int UserId { get; set; }
