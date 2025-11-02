@@ -1,6 +1,9 @@
 # Build results
 bin/
 obj/
+*.db
+*.sqlite
+*.sqlite3
 
 # User-specific files
 *.user
@@ -39,3 +42,10 @@ wwwroot/
 # Node / frontend builds (אם תצרף בעתיד לקליינט)
 node_modules/
 dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test results
+TestResults/

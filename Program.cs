@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // הוספת DbContext עם SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=myrecipes.db"));
+    options.UseSqlite("Data Source=./myrecipes.db"));
 
 
 
