@@ -1,35 +1,47 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// CORS לפיתוח (נצמצם בהמשך למקור הקליינט)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowClient", p =>
+        p.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+});
+
+// OpenAPI נשאיר אם נוח לך
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseCors("AllowClient");
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
+// ✔️ נקודת בריאות
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
+
+// ✔️ נקודת גרסה
+app.MapGet("/version", () => Results.Ok(new { version = "0.1.0" }));
+
+// (אופציונלי) להשאיר את WeatherForecast לדוגמה
 var summaries = new[]
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    "Freezing","Bracing","Chilly","Cool","Mild","Warm","Balmy","Hot","Sweltering","Scorching"
 };
 
 app.MapGet("/weatherforecast", () =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
+    var forecast = Enumerable.Range(1, 5).Select(index =>
+        new WeatherForecast(
             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             Random.Shared.Next(-20, 55),
             summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
+        )
+    ).ToArray();
     return forecast;
-})
-.WithName("GetWeatherForecast");
+});
 
 app.Run();
 
