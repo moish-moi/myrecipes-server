@@ -10,6 +10,7 @@ public class Recipe
     public int PreparationTime { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;  // ← הוסף את זה
+    public string? ImageUrl { get; set; }
     
     // קשר למשתמש
     public int UserId { get; set; }

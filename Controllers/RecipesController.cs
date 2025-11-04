@@ -60,6 +60,7 @@ public class RecipesController : ControllerBase
             Instructions = request.Instructions ?? string.Empty,
             Tags = request.Tags ?? string.Empty,
             PreparationTime = request.PreparationTime,
+            ImageUrl = request.ImageUrl,
             UserId = userId,
             CreatedAt = DateTime.UtcNow
         };
@@ -85,7 +86,8 @@ public class RecipesController : ControllerBase
         recipe.Instructions = request.Instructions ?? recipe.Instructions;
         recipe.Tags = request.Tags ?? recipe.Tags;
         recipe.PreparationTime = request.PreparationTime > 0 ? request.PreparationTime : recipe.PreparationTime;
-        
+        recipe.ImageUrl = request.ImageUrl ?? recipe.ImageUrl;
+
         _context.Recipes.Update(recipe);
         _context.SaveChanges();
         
@@ -131,4 +133,5 @@ public class CreateRecipeRequest
     public string? Instructions { get; set; }
     public string? Tags { get; set; }
     public int PreparationTime { get; set; }
+    public string? ImageUrl { get; set; }
 }
